@@ -1,33 +1,113 @@
 import './style.css';
+import { clear } from './clearEl.js';
+/* eslint-disable */
+import { del, trueFalse } from './interraction.js';
+/* eslint-enable */
 
 const form = document.querySelector('form');
+const input = document.querySelector('.input');
 const todoContainer = document.querySelector('.todoContainer');
+let todo;
+/* eslint-disable */
+export let todos = JSON.parse(localStorage.getItem('todos')) || [];
+/* eslint-enable */
+const store = () => {
+  todo = {
+    Description: input.value,
+    id: todos.length,
+    completed: false,
+  };
+  todos.push(todo);
+  localStorage.setItem('todos', JSON.stringify(todos));
+};
 
-const lists = [{
-  description: 'Start being me',
-  bool: 'false',
-  index: '1',
-},
-{
-  description: 'Just be happy',
-  bool: 'false',
-  index: '2',
-}, {
-  description: 'I am kenny',
-  bool: 'false',
-  index: '3',
-}];
-
-lists.forEach((task) => {
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const ul = document.createElement('ul');
-    const hr = document.createElement('hr');
-    ul.innerHTML = `
-    <li>
-    <input class="checkBox" type="checkbox">${task.description}<i class="fa-solid fa-ellipsis-vertical dots"></i>
-    </li>
-    `;
-    todoContainer.append(ul, hr);
+const removeBook = (id) => {
+  todos = todos.filter((books) => books.id !== id);
+  todos.forEach((todo, id) => {
+    todo.id = id;
   });
+  localStorage.setItem('todos', JSON.stringify(todos));
+};
+
+const addTask = (todo) => {
+  const ul = document.createElement('div');
+
+  const checkBox = document.createElement('input');
+  checkBox.type = 'checkbox';
+  checkBox.value = todo.completed;
+  checkBox.checked = todo.completed;
+  checkBox.classList.add('checkBox');
+
+  const newInp = document.createElement('input');
+  newInp.type = 'text';
+  newInp.classList.add('newInput');
+  newInp.value = todo.Description;
+  if (checkBox.checked) {
+    newInp.style.textDecoration = 'line-through';
+    newInp.style.opacity = '0.5';
+  }
+  const icon = document.createElement('i');
+  icon.classList.add('fa-solid');
+  icon.classList.add('fa-ellipsis-vertical');
+  icon.classList.add('dots');
+
+  const hr = document.createElement('hr');
+
+  ul.append(checkBox, newInp, icon, hr);
+
+  todoContainer.append(ul);
+
+  newInp.addEventListener('focusin', () => {
+    icon.classList.add('fa-trash');
+    icon.classList.add('bin');
+    icon.classList.remove('drag');
+    icon.classList.remove('fa-ellipsis-vertical');
+    icon.addEventListener('click', () => {
+      icon.parentElement.remove();
+      removeBook(todo.id);
+    });
+  });
+  newInp.addEventListener('focusout', () => {
+    icon.classList.remove('fa-trash');
+    icon.classList.add('fa-ellipsis-vertical');
+    icon.classList.add('drag');
+  });
+  trueFalse();
+};
+Array.prototype.forEach.call(todos, addTask);
+
+const clearCompleted = document.querySelector('#clear-completed');
+
+clearCompleted.addEventListener('click', () => {
+  const filterAll = todos.filter((item) => item.completed !== true);
+  todos = filterAll;
+  todos.forEach((todo, id) => {
+    todo.id = id;
+  });
+  localStorage.setItem('todos', JSON.stringify(todos));
+  del();
+});
+
+const editTodoList = () => {
+  const editInput = document.querySelectorAll('.newInput');
+  editInput.forEach((edits, indexed) => {
+    edits.addEventListener('change', () => {
+      todos.forEach((todo, index) => {
+        if (indexed === index) {
+          todo.Description = edits.value;
+          localStorage.setItem('todos', JSON.stringify(todos));
+        }
+      });
+    });
+  });
+};
+editTodoList();
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (input.value !== '') {
+    store();
+    addTask(todo);
+    clear();
+  }
 });
