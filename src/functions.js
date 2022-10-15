@@ -63,4 +63,4 @@ const editTodoList = () => {
 };
 editTodoList();
 
-export { addTask, clear, store }
+export { addTask, clear, store };
