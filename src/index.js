@@ -8,7 +8,7 @@ let todo;
 let todos = JSON.parse(localStorage.getItem('todos')) || [];
 const store = () => {
   todo = {
-    Description: input.value,
+    Description: inputEl.value,
     id: todos.length,
     completed: false,
   };
@@ -17,7 +17,7 @@ const store = () => {
 };
 
 const clear = () => {
-  input.value = '';
+  inputEl.value = '';
 };
 
 const removeBook = (id) => {
@@ -72,7 +72,5 @@ form.addEventListener('submit', (e) => {
     store();
     addTask(todo);
     clear();
-  } else {
-    alert('enter items');
   }
 });
