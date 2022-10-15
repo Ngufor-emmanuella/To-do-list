@@ -8,13 +8,14 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Output Management',
+      title: 'ToDO list',
       template: './src/index.html',
     }),
   ],
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
+    clean: true,
     publicPath: '/',
   },
   optimization: {
@@ -27,5 +28,6 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
     ],
-  }
+  },
+  mode: 'production',
 };
