@@ -1,4 +1,11 @@
 import './style.css';
+
+import { addTask, clear, store } from './functions.js';
+
+const form = document.querySelector('form');
+let todo;
+const inputEl = document.querySelector('.input');
+
 import { clear } from './clearEl.js';
 /* eslint-disable */
 import { del, trueFalse } from './interraction.js';
@@ -102,6 +109,7 @@ const editTodoList = () => {
   });
 };
 editTodoList();
+
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
